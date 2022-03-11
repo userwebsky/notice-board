@@ -1,0 +1,72 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Notices</title>
+    <link th:href="@{/templates/css/jquery-ui.css}" rel="stylesheet">
+    <link th:href="@{/templates/css/style.css}" rel="stylesheet">
+    <script th:src="@{/templates/js/jquery.js}"></script>
+    <script th:src="@{/templates/js/jquery-ui.js}"></script>
+    <script th:src="@{/templates/js/notice.js}"></script>
+</head>
+<body>
+<!--/*@thymesVar id="isSort" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="notices" type="java.util.List<pl.robertprogramista.noticeboard.model.Notice>"*/-->
+<div class="content" th:each="notice : ${notices}">
+    <div th:id="${notice.id}" th:ondrag="'update(' + ${notice.id} + ')'" th:theme="${notice.theme}" th:class="'notice ' + ${notice.theme} + '-theme ui-widget-content'">
+        <div th:class="'notice-header ' + ${notice.theme} + '-theme-header'"><div th:onclick="'closeNotice(' + ${notice.id} + ')'" class="close">x</div></div>
+        <div th:class="'notice-body ' + ${notice.theme} + '-theme'">
+            <textarea th:onkeyup="'update(' + ${notice.id} + ')'" th:text="${notice.description}"></textarea>
+        </div>
+    </div>
+    <script th:unless="${isSort}">
+        $("#[(${notice.id})]").offset({ top: [(${notice.positionTop})], left: [(${notice.positionLeft})]});
+    </script>
+    <script th:if="${isSort}">
+        var theme = "[(${notice.theme})]";
+        var themePositions = {
+            "yellow" : 0,
+            "orange" : 180,
+            "red"    : 360,
+            "green"  : 540,
+            "blue"   : 720
+        }
+        $("#[(${notice.id})]").offset({ top: 0, left: themePositions[theme]});
+    </script>
+</div>
+<div id="confirm" title="Are you sure?">
+    <p>This is an irreversible operation. Are you sure?</p>
+</div>
+<footer class="footer">
+    <div class="sample-box">
+        <table>
+            <tr>
+                <td>
+                    <div onclick="create('yellow')" class="yellow-theme theme-sample"></div>
+                </td>
+                <td>
+                    <div onclick="create('orange')" class="orange-theme theme-sample"></div>
+                </td>
+                <td>
+                    <div onclick="create('red')" class="red-theme theme-sample"></div>
+                </td>
+                <td>
+                    <div onclick="create('green')" class="green-theme theme-sample"></div>
+                </td>
+                <td>
+                    <div onclick="create('blue')" class="blue-theme theme-sample"></div>
+                </td>
+                <td>
+                    <div class="sort-button" th:unless="${isSort}">
+                        <a th:href="@{'/notices?isSort=true'}" class="ui-button ui-widget ui-corner-all">Sort</a>
+                    </div>
+                    <div class="dont-sort-button" th:if="${isSort}">
+                        <a th:href="@{'/notices'}" class="ui-button ui-widget ui-corner-all">Don't Sort</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</footer>
+</body>
+</html>

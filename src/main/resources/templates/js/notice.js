@@ -1,0 +1,56 @@
+function create(theme) {
+    $.post("/notices/create",
+        {"theme": theme, "description": "", "positionTop": 0, "positionLeft": 0},
+        function () {
+            location.reload();
+        });
+}
+
+function remove(noticeId) {
+    $.post("/notices/remove",
+        {"id": noticeId },
+        function () {
+            location.reload();
+        });
+}
+
+function update(noticeId) {
+    const notice = $('#' + noticeId);
+    const description = notice.find("textarea").val();
+    const position = notice.offset();
+    const theme = notice.attr("theme");
+    $.post("/notices/update",
+        {
+            "id" : noticeId,
+            "theme": theme,
+            "description": description,
+            "positionTop": position.top,
+            "positionLeft": position.left
+        },
+        function () {});
+}
+
+function closeNotice(noticeId) {
+    $("#confirm").data("noticeId", noticeId).dialog("open");
+}
+
+$(function () {
+    $(".notice").draggable();
+    $("#confirm").dialog({
+        resizable: false,
+        height: "auto",
+        width: 400,
+        autoOpen: false,
+        modal: true,
+        buttons: {
+            "Yes, I am sure.": function() {
+                var noticeId = $( this ).data("noticeId");
+                remove(noticeId);
+                $( this ).dialog( "close" );
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        }
+    });
+});
