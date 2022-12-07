@@ -2,10 +2,7 @@ package pl.robertprogramista.noticeboard.contoller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import pl.robertprogramista.noticeboard.model.Notice;
 import pl.robertprogramista.noticeboard.service.NoticeService;
 
@@ -13,7 +10,7 @@ import pl.robertprogramista.noticeboard.service.NoticeService;
 @RequestMapping("/notices")
 public class NoticeController {
 
-    private NoticeService service;
+    private final NoticeService service;
 
     public NoticeController(NoticeService service) {
         this.service = service;
@@ -26,7 +23,7 @@ public class NoticeController {
         return "index";
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     String update(Notice notice) {
         service.update(notice);
         return "index";
@@ -38,7 +35,7 @@ public class NoticeController {
         return "index";
     }
 
-    @PostMapping("/remove")
+    @DeleteMapping("/remove")
     String remove(Notice notice) {
         service.remove(notice);
         return "index";

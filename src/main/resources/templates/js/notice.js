@@ -7,11 +7,14 @@ function create(theme) {
 }
 
 function remove(noticeId) {
-    $.post("/notices/remove",
-        {"id": noticeId },
-        function () {
+    $.ajax({
+        url: '/notices/remove',
+        data: {"id": noticeId },
+        type: 'DELETE',
+        success: function () {
             location.reload();
-        });
+        }
+    });
 }
 
 function update(noticeId) {
@@ -19,15 +22,17 @@ function update(noticeId) {
     const description = notice.find("textarea").val();
     const position = notice.offset();
     const theme = notice.attr("theme");
-    $.post("/notices/update",
-        {
+    $.ajax({
+        url: '/notices/update',
+        type: 'PUT',
+        data: {
             "id" : noticeId,
             "theme": theme,
             "description": description,
             "positionTop": position.top,
             "positionLeft": position.left
         },
-        function () {});
+    });
 }
 
 function closeNotice(noticeId) {
