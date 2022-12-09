@@ -11,7 +11,4 @@ public interface NoticeRepository extends JpaRepository<Notice, Integer> {
     List<Notice> findAll();
     Optional<Notice> findById(Integer id);
     Notice save(Notice notice);
-
-    @Override
-    void deleteById(Integer integer);
 }
