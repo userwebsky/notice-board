@@ -2,11 +2,15 @@ package pl.robertprogramista.noticeboard.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pl.robertprogramista.noticeboard.model.Notice;
 import pl.robertprogramista.noticeboard.model.NoticeRepository;
 
@@ -14,18 +18,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(SpringExtension.class)
 class NoticeServiceTest {
     private NoticeService noticeService;
     private NoticeRepository repository;
+    @MockBean
+    private ApplicationEventPublisher eventPublisher;
 
     @BeforeEach
     void setUp() {
         repository = getNoticeRepository();
-        noticeService = new NoticeService(repository);
+        noticeService = new NoticeService(repository, eventPublisher);
     }
 
     @Test
@@ -38,7 +44,7 @@ class NoticeServiceTest {
 
         //then
         assertEquals(repository.getById(0), notice);
-        assertEquals(repository.count(), 1L);
+        assertEquals(1L, repository.count());
     }
 
     @Test
@@ -53,8 +59,8 @@ class NoticeServiceTest {
 
         //then
         assertEquals(repository.getById(0), notice);
-        assertEquals(repository.count(), 1L);
-        assertEquals(repository.getById(0).getDescription(), "abcd");
+        assertEquals(1L, repository.count());
+        assertEquals("abcd", repository.getById(0).getDescription());
     }
 
     @Test
@@ -71,7 +77,7 @@ class NoticeServiceTest {
         //then
         assertEquals(repository.getById(0), notice1);
         assertEquals(repository.getById(1), notice2);
-        assertEquals(notices.size(), 2);
+        assertEquals(2, notices.size());
     }
 
     @Test
@@ -84,7 +90,7 @@ class NoticeServiceTest {
         noticeService.remove(notice);
 
         //then
-        assertEquals(repository.count(), 0);
+        assertEquals(0, repository.count());
     }
 
     private Notice getNotice(int id) {
@@ -99,7 +105,7 @@ class NoticeServiceTest {
 
     private NoticeRepository getNoticeRepository() {
         return new NoticeRepository() {
-            private List<Notice> notices = new ArrayList<>();
+            private final List<Notice> notices = new ArrayList<>();
 
             @Override
             public List<Notice> findAll() {
@@ -174,7 +180,7 @@ class NoticeServiceTest {
 
             @Override
             public Notice getById(Integer noticeId) {
-                return notices.stream().filter(notice -> notice.getId() == noticeId).collect(Collectors.toList()).get(0);
+                return notices.stream().filter(notice -> notice.getId() == noticeId).toList().get(0);
             }
 
             @Override

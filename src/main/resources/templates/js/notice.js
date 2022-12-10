@@ -2,7 +2,9 @@ function create(theme) {
     $.post("/notices/create",
         {"theme": theme, "description": "", "positionTop": 0, "positionLeft": 0},
         function () {
-            location.reload();
+            if (location.search.length === 0) {
+                location.href = "/notices";
+            }
         });
 }
 
