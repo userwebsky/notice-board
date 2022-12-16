@@ -184,6 +184,11 @@ class NoticeServiceTest {
             }
 
             @Override
+            public Notice getReferenceById(Integer integer) {
+                return null;
+            }
+
+            @Override
             public <S extends Notice> List<S> findAll(Example<S> example) {
                 return null;
             }
