@@ -78,6 +78,15 @@ body {
     margin-left: 36%;
 }
 
+.footer-anonymous-user {
+    position: absolute;
+    bottom: 0;
+    width: 100px;
+    height: 50px;
+    color: white;
+    margin-left: 70%;
+}
+
 .sample-box {
     margin-top: 5px;
     margin-left: 7%;
@@ -108,4 +117,12 @@ body {
 
 .dont-sort-button {
     width: 200px !important;
+}
+
+.auth-box {
+    float: right;
+    color: white;
+    cursor: pointer;
+    font-size: large;
+    font-weight: bolder;
 }

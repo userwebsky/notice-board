@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>Notices</title>
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link th:href="@{/templates/css/jquery-ui.css}" rel="stylesheet">
     <link th:href="@{/templates/css/style.css}" rel="stylesheet">
     <script th:src="@{/templates/js/jquery.js}"></script>
@@ -10,13 +12,21 @@
     <script th:src="@{/templates/js/notice.js}"></script>
 </head>
 <body>
+<a class="auth-box" sec:authorize="!isAuthenticated()" th:href="@{'/notices'}">log in</a>
+<a class="auth-box" sec:authorize="isAuthenticated()" th:href="@{'/logout'}">logout</a>
 <!--/*@thymesVar id="isSort" type="java.lang.Boolean"*/-->
 <!--/*@thymesVar id="notices" type="java.util.List<pl.robertprogramista.noticeboard.model.Notice>"*/-->
 <div class="content" th:each="notice : ${notices}">
-    <div th:id="${notice.id}" th:ondrag="'update(' + ${notice.id} + ')'" th:theme="${notice.theme}" th:class="'notice ' + ${notice.theme} + '-theme ui-widget-content'">
-        <div th:class="'notice-header ' + ${notice.theme} + '-theme-header'"><div th:onclick="'closeNotice(' + ${notice.id} + ')'" class="close">x</div></div>
+    <div sec:authorize="isAuthenticated()" th:id="${notice.id}" th:ondrag="'update(' + ${notice.id} + ')'" th:theme="${notice.theme}" th:class="'notice ' + ${notice.theme} + '-theme ui-widget-content'">
+        <div th:class="'notice-header ' + ${notice.theme} + '-theme-header'"><div sec:authorize="isAuthenticated()" th:onclick="'closeNotice(' + ${notice.id} + ')'" class="close">x</div></div>
         <div th:class="'notice-body ' + ${notice.theme} + '-theme'">
             <textarea th:onkeyup="'update(' + ${notice.id} + ')'" th:text="${notice.description}"></textarea>
+        </div>
+    </div>
+    <div sec:authorize="!isAuthenticated()"  th:id="${notice.id}" th:theme="${notice.theme}" th:class="'notice ' + ${notice.theme} + '-theme ui-widget-content'">
+        <div th:class="'notice-header ' + ${notice.theme} + '-theme-header'"></div>
+        <div th:class="'notice-body ' + ${notice.theme} + '-theme'">
+            <div th:text="${notice.description}"></div>
         </div>
     </div>
     <script th:unless="${isSort}">
@@ -37,7 +47,7 @@
 <div id="confirm" title="Are you sure?">
     <p>This is an irreversible operation. Are you sure?</p>
 </div>
-<footer class="footer">
+<footer class="footer" sec:authorize="isAuthenticated()">
     <div class="sample-box">
         <table>
             <tr>
@@ -62,6 +72,22 @@
                     </div>
                     <div class="dont-sort-button" th:if="${isSort}">
                         <a th:href="@{'/notices'}" class="ui-button ui-widget ui-corner-all">Don't Sort</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</footer>
+<footer class="footer-anonymous-user" sec:authorize="!isAuthenticated()">
+    <div class="sample-box">
+        <table>
+            <tr>
+                <td>
+                    <div class="sort-button" th:unless="${isSort}">
+                        <a th:href="@{'/?isSort=true'}" class="ui-button ui-widget ui-corner-all">Sort</a>
+                    </div>
+                    <div class="dont-sort-button" th:if="${isSort}">
+                        <a th:href="@{'/'}" class="ui-button ui-widget ui-corner-all">Don't Sort</a>
                     </div>
                 </td>
             </tr>

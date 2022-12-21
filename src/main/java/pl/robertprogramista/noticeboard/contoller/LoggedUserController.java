@@ -8,11 +8,11 @@ import pl.robertprogramista.noticeboard.service.NoticeService;
 
 @Controller
 @RequestMapping("/notices")
-public class NoticeController {
+public class LoggedUserController {
 
     private final NoticeService service;
 
-    public NoticeController(NoticeService service) {
+    public LoggedUserController(NoticeService service) {
         this.service = service;
     }
 

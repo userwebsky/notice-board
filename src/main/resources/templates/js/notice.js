@@ -1,11 +1,23 @@
+var token = $('#_csrf').attr('content');
+var header = $('#_csrf_header').attr('content');
+
 function create(theme) {
-    $.post("/notices/create",
-        {"theme": theme, "description": "", "positionTop": 0, "positionLeft": 0},
-        function () {
-            if (location.search.length === 0) {
-                location.href = "/notices";
-            }
-        });
+    $.ajax({
+        url: '/notices/create',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        },
+        data: {
+            "theme": theme,
+            "description": "",
+            "positionTop": 0,
+            "positionLeft": 0
+        },
+        type: 'POST',
+        success: function () {
+            location.reload();
+        }
+    });
 }
 
 function remove(noticeId) {
@@ -13,6 +25,9 @@ function remove(noticeId) {
         url: '/notices/remove',
         data: {"id": noticeId },
         type: 'DELETE',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        },
         success: function () {
             location.reload();
         }
@@ -27,6 +42,9 @@ function update(noticeId) {
     $.ajax({
         url: '/notices/update',
         type: 'PUT',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        },
         data: {
             "id" : noticeId,
             "theme": theme,

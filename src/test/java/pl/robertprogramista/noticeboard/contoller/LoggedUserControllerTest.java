@@ -9,13 +9,13 @@ import pl.robertprogramista.noticeboard.service.NoticeService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class NoticeControllerTest {
-    private NoticeController noticeController;
+class LoggedUserControllerTest {
+    private LoggedUserController loggedUserController;
 
     @BeforeEach
     void setUp() {
         NoticeService noticeService = Mockito.mock(NoticeService.class);
-        noticeController = new NoticeController(noticeService);
+        loggedUserController = new LoggedUserController(noticeService);
     }
 
     @Test
@@ -25,7 +25,7 @@ class NoticeControllerTest {
        Boolean isSort = true;
 
        //when
-       String result = noticeController.showNotices(model, true);
+       String result = loggedUserController.showNotices(model, true);
 
        //then
        assertEquals(result, "index");
@@ -37,7 +37,7 @@ class NoticeControllerTest {
         Notice notice = Mockito.mock(Notice.class);
 
         //when
-        String result = noticeController.update(notice);
+        String result = loggedUserController.update(notice);
 
         //then
         assertEquals(result, "index");
@@ -49,7 +49,7 @@ class NoticeControllerTest {
         Notice notice = Mockito.mock(Notice.class);
 
         //when
-        String result = noticeController.create(notice);
+        String result = loggedUserController.create(notice);
 
         //then
         assertEquals(result, "index");
@@ -61,7 +61,7 @@ class NoticeControllerTest {
         Notice notice = Mockito.mock(Notice.class);
 
         //when
-        String result = noticeController.remove(notice);
+        String result = loggedUserController.remove(notice);
 
         //then
         assertEquals(result, "index");
